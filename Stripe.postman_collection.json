@@ -1,0 +1,809 @@
+{
+	"info": {
+		"_postman_id": "b0a35dd0-233a-480b-aee7-0fa953446e86",
+		"name": "Stripe",
+		"description": "This is to manage customer in stripe dashboard",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21011371"
+	},
+	"item": [
+		{
+			"name": "Customers",
+			"item": [
+				{
+					"name": "Create Customers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//test cases\r",
+									"//executed after the response is received\r",
+									"//written in js\r",
+									"\r",
+									"//environment variable\r",
+									"\r",
+									"//local variable\r",
+									"//global variable\r",
+									"\r",
+									"//assign a variable\r",
+									"//local variable - which scope is local\r",
+									"// let name = \"vaibhav\"\r",
+									"// console.log(name)\r",
+									"// let age = 27\r",
+									"// var lname = \"srivastava\"\r",
+									"//print log in console\r",
+									"//console.log(name)\r",
+									"//console.log(\"this is test script\")\r",
+									"\r",
+									"//collection variable - which you can create at collection level, specfic to collection, all request inside that can use that variable\r",
+									"// pm.collectionVariables.set(\"age\", 27);\r",
+									"// console.log(pm.collectionVariables.get(\"age\"));\r",
+									"\r",
+									"// environment variable - at environment level\r",
+									"//QA,UAT,DEV,PROD\r",
+									"// PROD - https://api.stripe.com\r",
+									"// QA - https://qa.api.stripe.com\r",
+									"// UAT - https://uat.api.stripe.com\r",
+									"// dev - https://dev.api.stripe.com\r",
+									"\r",
+									"// pm.environment.set(\"url1\", \"api.stripe.com\");\r",
+									"// console.log(pm.environment.get(\"url1\"));\r",
+									"\r",
+									"// //global variables - scope is global.\r",
+									"// pm.globals.set(\"protocols\", \"http\");\r",
+									"//console.log(pm.globals.get(\"protocols\"));\r",
+									"\r",
+									"//Problem: is to handle customer Id (dynamic)\r",
+									"//approach: i will capture id from the response\r",
+									"//i will assign that id to variable (x = cus_NUXhnE2XBJu1as)\r",
+									"// then i will use that variable in other APIs\r",
+									"\r",
+									"//Step 1: capture complete JSON Response, assign it to variable\r",
+									"var responseBody = pm.response.json();\r",
+									"console.log(responseBody.id);\r",
+									"console.log(responseBody.address.city);\r",
+									"console.log(responseBody.preferred_locales[1]);\r",
+									"\r",
+									"//Step 2: assign this to a variable\r",
+									"pm.collectionVariables.set(\"custID\",responseBody.id);\r",
+									"\r",
+									"//Step 3: to use this variables in other APIs\r",
+									"\r",
+									"\r",
+									"//excel sheet for test data\r",
+									"\r",
+									"//how to add test cases in postman\r",
+									"\r",
+									"//1) response code should be 200\r",
+									"\r",
+									"pm.test(\"TC1- Status Check 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"//2) Email ID Check\r",
+									"pm.test(\"TC2- Email ID Check\", function(){\r",
+									"    \r",
+									"// pm.expect(responseBody.email).to.eql(pm.collectionVariables.get(\"email\"));\r",
+									"\r",
+									"pm.expect(responseBody.email).to.eql(pm.iterationData.get(\"emails\"));\r",
+									"});\r",
+									"\r",
+									"//3) your headers should contain Content-type\r",
+									"pm.test(\"TC3- Content-Type is present\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"//4) content-type is application/json or not\r",
+									"pm.test(\"TC4- Content-type is json or not\",function(){\r",
+									"//    pm.response.json(); - response body\r",
+									"    var resHeader = pm.response.headers.get(\"Content-Type\");\r",
+									"    pm.expect(resHeader).to.eql(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"//5) Response time of the request is < 2sec\r",
+									"pm.test(\"TC5- Response time is less than 0.2sec\", function () {\r",
+									"// <= 2sec\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"//6) response code should be 200,201\r",
+									"\r",
+									"pm.test(\"TC1- Status Check 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"TC6 - response code is 200 or 201\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,200]);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"//Token generation API -> Response headers -> token is coming\r",
+									"//Token   Bearer 1123123fasdfsadfa\r",
+									"\r",
+									"//Create User --> Read -> Update -> delete\r",
+									"\r",
+									"//workflow\r",
+									"//if create_user able to generate id\r",
+									"//then run read api\r",
+									"//else stop\r",
+									"\r",
+									"//workflow\r",
+									"\r",
+									"var mail =  responseBody.email;\r",
+									"\r",
+									"if(mail === \"vaibhav1@testing.com\")\r",
+									"{\r",
+									"postman.setNextRequest(\"Retreive a customer\");\r",
+									"}\r",
+									"else{\r",
+									"    postman.setNextRequest(null);\r",
+									"}\r",
+									"\r",
+									"pm.sendRequest(\"https://postman-echo.com/get\", function (err, response) {\r",
+									"    console.log(response.json());\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//this section which is executed before the api is executed or request is sent\r",
+									"//this is written in js.\r",
+									"\r",
+									"console.log(\"this is pre request script\")\r",
+									"\r",
+									"pm.collectionVariables.set(\"demo\",\"this is prerequest variable\");\r",
+									"console.log(pm.collectionVariables.get(\"demo\"));\r",
+									"\r",
+									"pm.variables.get(\"demo\");\r",
+									"pm.variables.set(\"name\", \"vaibhav\");\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "sk_test_51LSffFSHAzlVCn31FW0YK27tfSobOx6QqOUCUM81tAnNzIdmyQp84DNshSTPV4cEVPttOdNwtVdbC9MeHMtuKSUX00j6TBz8NP",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "vaibhav srivastava",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "vaibhav@testing.com",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "hi",
+									"type": "text"
+								},
+								{
+									"key": "address[city]",
+									"value": "bangalore",
+									"type": "text"
+								},
+								{
+									"key": "address[country]",
+									"value": "IN",
+									"type": "text"
+								},
+								{
+									"key": "invoice_settings[footer]",
+									"value": "abc",
+									"type": "text"
+								},
+								{
+									"key": "preferred_locales[0]",
+									"value": "hello",
+									"type": "text"
+								},
+								{
+									"key": "preferred_locales[1]",
+									"value": "hi",
+									"type": "text"
+								},
+								{
+									"key": "address[state]",
+									"value": "KA",
+									"type": "text"
+								},
+								{
+									"key": "metadata[CustomerReferenceId]",
+									"value": "1234",
+									"type": "text"
+								},
+								{
+									"key": "invoice_settings[custom_fields][0][name]",
+									"value": "vaibhav",
+									"type": "text"
+								},
+								{
+									"key": "invoice_settings[custom_fields][0][value]",
+									"value": "123",
+									"type": "text"
+								},
+								{
+									"key": "invoice_settings[custom_fields][1][name]",
+									"value": "neeta",
+									"type": "text"
+								},
+								{
+									"key": "invoice_settings[custom_fields][1][value]",
+									"value": "1234",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://api.stripe.com/v1/customers?query='created>1620310503'",
+							"protocol": "https",
+							"host": [
+								"api",
+								"stripe",
+								"com"
+							],
+							"path": [
+								"v1",
+								"customers"
+							],
+							"query": [
+								{
+									"key": "query",
+									"value": "'created>1620310503'"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Balances",
+			"item": []
+		},
+		{
+			"name": "Retreive a customer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "sk_test_51LSffFSHAzlVCn31FW0YK27tfSobOx6QqOUCUM81tAnNzIdmyQp84DNshSTPV4cEVPttOdNwtVdbC9MeHMtuKSUX00j6TBz8NP",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "https://{{url}}/v1/customers/cus_NWmyIQL4Xp4azp",
+					"protocol": "https",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v1",
+						"customers",
+						"cus_NWmyIQL4Xp4azp"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "vaibhav1@testing.com",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List All Customers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//full response\r",
+							"var getResp = pm.response.json();\r",
+							"console.log(getResp.data[0].id);\r",
+							"console.log(getResp.data[1].id);\r",
+							"console.log(getResp.data[0].preferred_locales[0]);\r",
+							"\r",
+							"pm.collectionVariables.set(\"cust1\",getResp.data[0].id);\r",
+							"pm.collectionVariables.set(\"cust2\",getResp.data[1].id);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "sk_test_51LSffFSHAzlVCn31FW0YK27tfSobOx6QqOUCUM81tAnNzIdmyQp84DNshSTPV4cEVPttOdNwtVdbC9MeHMtuKSUX00j6TBz8NP",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.stripe.com/v1/customers?limit=2",
+					"protocol": "https",
+					"host": [
+						"api",
+						"stripe",
+						"com"
+					],
+					"path": [
+						"v1",
+						"customers"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "vaibhav1@testing.com",
+							"disabled": true
+						},
+						{
+							"key": "limit",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Customer",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "sk_test_51LSffFSHAzlVCn31FW0YK27tfSobOx6QqOUCUM81tAnNzIdmyQp84DNshSTPV4cEVPttOdNwtVdbC9MeHMtuKSUX00j6TBz8NP",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "vaibhav srivastava",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "vaibhav@testing.com",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://api.stripe.com/v1/customers/{{custID}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"stripe",
+						"com"
+					],
+					"path": [
+						"v1",
+						"customers",
+						"{{custID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Customer",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "sk_test_51LSffFSHAzlVCn31FW0YK27tfSobOx6QqOUCUM81tAnNzIdmyQp84DNshSTPV4cEVPttOdNwtVdbC9MeHMtuKSUX00j6TBz8NP",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://api.stripe.com/v1/customers/{{custID}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"stripe",
+						"com"
+					],
+					"path": [
+						"v1",
+						"customers",
+						"{{custID}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Delete Customer  - error response",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://api.stripe.com/v1/customers/cus_NKSP85xgFgQLNz",
+							"protocol": "https",
+							"host": [
+								"api",
+								"stripe",
+								"com"
+							],
+							"path": [
+								"v1",
+								"customers",
+								"cus_NKSP85xgFgQLNz"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Server",
+							"value": "nginx"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 09 Mar 2023 01:40:03 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "333"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "GET, POST, HEAD, OPTIONS, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Access-Control-Expose-Headers",
+							"value": "Request-Id, Stripe-Manage-Version, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required"
+						},
+						{
+							"key": "Access-Control-Max-Age",
+							"value": "300"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store"
+						},
+						{
+							"key": "Request-Id",
+							"value": "req_upZxAJMJCaD9UH"
+						},
+						{
+							"key": "Stripe-Version",
+							"value": "2022-08-01"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=63072000; includeSubDomains; preload"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": {\n        \"code\": \"resource_missing\",\n        \"doc_url\": \"https://stripe.com/docs/error-codes/resource-missing\",\n        \"message\": \"No such customer: 'cus_NKSP85xgFgQLNz'\",\n        \"param\": \"id\",\n        \"request_log_url\": \"https://dashboard.stripe.com/test/logs/req_upZxAJMJCaD9UH?t=1678326003\",\n        \"type\": \"invalid_request_error\"\n    }\n}"
+				},
+				{
+					"name": "Delete Customer - Success Response",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://api.stripe.com/v1/customers/cus_NKSPR7mdgq94BE",
+							"protocol": "https",
+							"host": [
+								"api",
+								"stripe",
+								"com"
+							],
+							"path": [
+								"v1",
+								"customers",
+								"cus_NKSPR7mdgq94BE"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Server",
+							"value": "nginx"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 09 Mar 2023 01:42:29 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "75"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "GET, POST, HEAD, OPTIONS, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Access-Control-Expose-Headers",
+							"value": "Request-Id, Stripe-Manage-Version, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required"
+						},
+						{
+							"key": "Access-Control-Max-Age",
+							"value": "300"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store"
+						},
+						{
+							"key": "Request-Id",
+							"value": "req_aUHWrzAWE1hYAe"
+						},
+						{
+							"key": "Stripe-Version",
+							"value": "2022-08-01"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=63072000; includeSubDomains; preload"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"cus_NKSPR7mdgq94BE\",\n    \"object\": \"customer\",\n    \"deleted\": true\n}"
+				}
+			]
+		},
+		{
+			"name": "Search Request",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "sk_test_51LSffFSHAzlVCn31FW0YK27tfSobOx6QqOUCUM81tAnNzIdmyQp84DNshSTPV4cEVPttOdNwtVdbC9MeHMtuKSUX00j6TBz8NP",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.stripe.com/v1/customers/search?query=created>1620310503",
+					"protocol": "https",
+					"host": [
+						"api",
+						"stripe",
+						"com"
+					],
+					"path": [
+						"v1",
+						"customers",
+						"search"
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": "created>1620310503"
+						},
+						{
+							"key": "limit",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"",
+					"//1 api is giving 201 response code",
+					"",
+					"",
+					"//get the request name",
+					"",
+					"var reqName = pm.info.requestName",
+					"console.log(reqName)",
+					"",
+					"if(reqName === \"Delete Customer\")",
+					"{",
+					"    pm.test.skip(\"Status code is 200\", function () {",
+					"            pm.response.to.have.status(200);",
+					"        });",
+					"",
+					"}",
+					"else{",
+					"pm.test(\"Status code is 200\", function () {",
+					"        pm.response.to.have.status(200);",
+					"    });",
+					"",
+					"}"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "endpoint",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "name",
+			"value": ""
+		},
+		{
+			"key": "age",
+			"value": ""
+		},
+		{
+			"key": "custID",
+			"value": ""
+		},
+		{
+			"key": "cust1",
+			"value": ""
+		},
+		{
+			"key": "cust2",
+			"value": ""
+		},
+		{
+			"key": "email",
+			"value": ""
+		},
+		{
+			"key": "demo",
+			"value": ""
+		}
+	]
+}
